@@ -144,7 +144,7 @@
             100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
 
-        /* 스턴 메시지 스타일 (NEW) */
+        /* 스턴 메시지 스타일 */
         #stun-message {
             position: absolute;
             bottom: 60px; /* Above the player area */
@@ -162,19 +162,46 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        /* Game Messages */
-        #message-box {
+        /* Game Messages & Modals */
+        .modal-overlay {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.95);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 30;
+        }
+
+        .modal-content {
+            background-color: #fff;
             padding: 2rem;
             border-radius: 0.75rem;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             text-align: center;
-            z-index: 20;
-            display: none;
+            max-width: 90%;
+            width: 300px;
+        }
+
+        #message-box {
+            display: none; /* Initial state */
+        }
+
+        #submission-modal {
+            display: none; /* Initial state */
+        }
+
+        #submission-modal input {
+            padding: 0.5rem;
+            border: 2px solid #ccc;
+            border-radius: 0.5rem;
+            width: 100%;
+            margin-bottom: 1rem;
+            font-family: sans-serif;
+            text-align: center;
         }
 
         #message-box h2 {
@@ -203,6 +230,7 @@
             cursor: pointer;
             transition: background-color 0.1s;
             width: 45%;
+            min-width: 100px;
         }
 
         .chop-button:active {
@@ -219,7 +247,43 @@
             margin-top: 1rem;
             font-size: 0.9rem;
             color: #6b7280;
+            text-align: center;
         }
+
+        /* Leaderboard Styling */
+        .leaderboard {
+            width: 100%;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px dashed #ccc;
+            text-align: center;
+        }
+
+        .leaderboard h3 {
+            font-size: 1.5rem;
+            color: #9c4221;
+            margin-bottom: 0.5rem;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0.25rem;
+            border-radius: 0.5rem;
+            background-color: #f7fafc;
+        }
+
+        .leaderboard-item.rank-1 { background-color: #ffeb3b; font-weight: bold; } /* Gold */
+        .leaderboard-item.rank-2 { background-color: #c0c0c0; font-weight: bold; } /* Silver */
+        .leaderboard-item.rank-3 { background-color: #cd7f32; color: white; font-weight: bold; } /* Bronze */
     </style>
 </head>
 <body>
@@ -244,7 +308,7 @@
                 <!-- 나무꾼 캐릭터 (도끼 이모지) -->
                 🪓
             </div>
-            <!-- 스턴 메시지 추가 (NEW) -->
+            <!-- 스턴 메시지 추가 -->
             <div id="stun-message" style="display: none;">😵‍💫 STUNNED!</div>
         </div>
 
@@ -259,29 +323,61 @@
         </div>
 
         <!-- 게임 설명 -->
-        <div class="instructions hidden md:block">
+        <div class="instructions">
             키보드: [←] 왼쪽 베기 | [→] 오른쪽 베기
             <br>
             **스페이스 바를 눌러 재시작!**
             <br>
             **나뭇가지에 부딪히지 않도록 조심하세요! (충돌 시 1.5초 스턴)**
         </div>
+        
+        <!-- 순위표 영역 (NEW) -->
+        <div class="leaderboard">
+            <h3>🏆 순위표 (Top 3)</h3>
+            <ul id="leaderboard-list" class="leaderboard-list">
+                <!-- 순위 데이터가 여기에 렌더링됩니다 -->
+                <li class="p-2 text-gray-500">로딩 중...</li>
+            </ul>
+        </div>
     </div>
 
     <!-- 메시지 박스 (게임 오버 / 승리) -->
-    <div id="message-box">
-        <h2 id="message-title"></h2>
-        <p id="message-text" class="text-lg mb-4"></p>
-        <button id="restart-button" class="chop-button" onclick="initGame()">다시 시작</button>
+    <div id="message-box" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="message-title"></h2>
+            <p id="message-text" class="text-lg mb-4"></p>
+            <button id="restart-button" class="chop-button w-full" onclick="initGame()">다시 시작</button>
+        </div>
+    </div>
+
+    <!-- 점수 등록 모달 (NEW) -->
+    <div id="submission-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="text-2xl mb-2 text-green-600">🎉 축하합니다! 순위권 기록!</h2>
+            <p class="mb-4 text-gray-700">이름을 등록하고 순위표에 올라보세요.</p>
+            <input type="text" id="player-name-input" placeholder="여기에 이름을 입력하세요 (3자 이내)" maxlength="3" onkeyup="checkInputLength(this)">
+            <p id="time-to-submit" class="text-sm mb-4 text-gray-500"></p>
+            <button class="chop-button w-full" onclick="submitScore()">점수 등록</button>
+        </div>
     </div>
 
     <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Firebase Variables
+        let db;
+        let auth;
+        let userId;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
         // Game State Variables
         const TOTAL_CHOP = 100;
-        const VISIBLE_SEGMENTS = 7; // Number of tree segments visible in the tree-area
-        const SEGMENT_HEIGHT = 50; // Must match CSS
+        const VISIBLE_SEGMENTS = 7; 
+        const SEGMENT_HEIGHT = 50; 
 
-        // Branch codes: 0 = None, 1 = Left, 2 = Right
         const BRANCH_NONE = 0;
         const BRANCH_LEFT = 1;
         const BRANCH_RIGHT = 2;
@@ -291,12 +387,11 @@
         let gameStarted = false; 
         let startTime = 0;
         let timerInterval = null;
-        let playerSide = 'left'; // 'left' or 'right'
-        let isStunned = false; // NEW: 스턴 상태 추적
-        const STUN_DURATION = 1500; // 1.5초 스턴
+        let playerSide = 'left'; 
+        let isStunned = false; 
+        let finalTime = 0; // NEW: 최종 시간 저장 변수
+        const STUN_DURATION = 1500; 
 
-        // The tree array holds the branch status for each segment (bottom to top)
-        // tree[0] is the segment being chopped
         let tree = []; 
 
         // DOM Elements
@@ -307,13 +402,170 @@
         const messageBox = document.getElementById('message-box');
         const messageTitle = document.getElementById('message-title');
         const messageText = document.getElementById('message-text');
-        const stunMessageEl = document.getElementById('stun-message'); // NEW: 스턴 메시지 엘리먼트
+        const stunMessageEl = document.getElementById('stun-message');
+        const submissionModal = document.getElementById('submission-modal'); // NEW
+        const playerNameInput = document.getElementById('player-name-input'); // NEW
+        const timeToSubmitEl = document.getElementById('time-to-submit'); // NEW
+        const leaderboardListEl = document.getElementById('leaderboard-list'); // NEW
 
-        /**
-         * Converts base64 to ArrayBuffer (required for TTS)
-         * NOTE: Although this template supports TTS, it is not used in this game. 
-         * It is included to satisfy the boilerplate requirements for advanced features.
-         */
+        // --- Firebase/Auth/Leaderboard Functions ---
+
+        async function initFirebaseAndAuth() {
+            try {
+                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                userId = auth.currentUser?.uid || crypto.randomUUID();
+                
+                // Firestore 리스너 설정
+                setupLeaderboardListener();
+            } catch (error) {
+                console.error("Firebase 초기화 또는 인증 오류:", error);
+                leaderboardListEl.innerHTML = '<li class="p-2 text-red-500">순위표 로딩 실패: Firebase 오류</li>';
+            }
+        }
+
+        // Leaderboard Collection Path: Public data for sharing
+        function getLeaderboardCollection() {
+            return collection(db, `artifacts/${appId}/public/data/high_scores`);
+        }
+
+        function setupLeaderboardListener() {
+            if (!db) return;
+
+            // 시간을 기준으로 오름차순 정렬하여 상위 3개만 가져옴
+            const q = query(getLeaderboardCollection(), orderBy('time', 'asc'), limit(3));
+
+            // 실시간 리스너 설정
+            onSnapshot(q, (snapshot) => {
+                const scores = [];
+                snapshot.forEach((doc) => {
+                    scores.push({ id: doc.id, ...doc.data() });
+                });
+                renderLeaderboard(scores);
+            }, (error) => {
+                console.error("순위표 실시간 업데이트 오류:", error);
+                leaderboardListEl.innerHTML = '<li class="p-2 text-red-500">순위표 실시간 오류</li>';
+            });
+        }
+
+        async function checkAndShowLeaderboard(newTime) {
+            if (!db) {
+                gameOver(true, false); // Firebase 오류 시 일반 승리 메시지 표시
+                return;
+            }
+
+            // 현재 상위 3개 기록을 가져옴
+            const q = query(getLeaderboardCollection(), orderBy('time', 'asc'), limit(3));
+            const snapshot = await getDocs(q);
+            const currentScores = snapshot.docs.map(doc => doc.data());
+
+            let qualifies = false;
+
+            if (currentScores.length < 3) {
+                // 3개 미만이면 무조건 순위권
+                qualifies = true;
+            } else {
+                // 현재 3등 기록보다 빠르면 순위권
+                const thirdPlaceTime = currentScores[2].time;
+                if (newTime < thirdPlaceTime) {
+                    qualifies = true;
+                }
+            }
+            
+            if (qualifies) {
+                // 순위권이면 이름 등록 모달 표시
+                finalTime = newTime; // 등록할 시간 저장
+                showSubmissionModal();
+            } else {
+                // 순위권이 아니면 일반 승리 메시지 표시
+                gameOver(true, true); 
+            }
+        }
+
+        function showSubmissionModal() {
+            submissionModal.style.display = 'flex';
+            messageBox.style.display = 'none'; // 승리 메시지 숨김
+            timeToSubmitEl.textContent = `기록: ${finalTime.toFixed(2)}s`;
+            playerNameInput.value = ''; // 입력값 초기화
+            playerNameInput.focus();
+        }
+
+        function checkInputLength(input) {
+            // 최대 3자로 제한
+            if (input.value.length > 3) {
+                input.value = input.value.substring(0, 3);
+            }
+        }
+
+        async function submitScore() {
+            const name = playerNameInput.value.trim() || '익명';
+            
+            if (!db) {
+                console.error("Firestore가 초기화되지 않았습니다.");
+                return;
+            }
+
+            try {
+                await addDoc(getLeaderboardCollection(), {
+                    name: name,
+                    time: finalTime,
+                    userId: userId,
+                    timestamp: Date.now()
+                });
+                
+                submissionModal.style.display = 'none';
+                gameOver(true, true); // 등록 후 일반 승리 메시지 표시 (이미 순위권 진입 완료)
+            } catch (e) {
+                console.error("점수 등록 오류: ", e);
+                // 오류 발생 시에도 일단 승리 메시지는 표시
+                submissionModal.style.display = 'none';
+                gameOver(true, true); 
+            }
+        }
+
+        function renderLeaderboard(scores) {
+            leaderboardListEl.innerHTML = '';
+            
+            if (scores.length === 0) {
+                leaderboardListEl.innerHTML = '<li class="p-2 text-gray-500">아직 등록된 기록이 없습니다.</li>';
+                return;
+            }
+
+            scores.forEach((score, index) => {
+                const rank = index + 1;
+                const listItem = document.createElement('li');
+                
+                // 순위에 따른 배경색 클래스 추가
+                let rankClass = '';
+                if (rank === 1) rankClass = 'rank-1';
+                else if (rank === 2) rankClass = 'rank-2';
+                else if (rank === 3) rankClass = 'rank-3';
+
+                listItem.className = `leaderboard-item ${rankClass}`;
+                listItem.innerHTML = `
+                    <span class="w-1/6 text-left">${rank}위</span>
+                    <span class="w-3/6 text-center">${score.name}</span>
+                    <span class="w-2/6 text-right">${score.time.toFixed(2)}s</span>
+                `;
+                leaderboardListEl.appendChild(listItem);
+            });
+        }
+
+
+        // --- Game Logic Functions (Minor modifications) ---
+        
+        // base64ToArrayBuffer (보일러플레이트 유지)
         function base64ToArrayBuffer(base64) {
             const binaryString = atob(base64);
             const len = binaryString.length;
@@ -324,10 +576,6 @@
             return bytes.buffer;
         }
 
-        /**
-         * Generates a random branch status (0, 1, or 2)
-         * Favor no branch (0) to make it playable.
-         */
         function getRandomBranch() {
             const rand = Math.random();
             if (rand < 0.2) return BRANCH_LEFT;
@@ -335,29 +583,20 @@
             return BRANCH_NONE; // 60% chance of no branch
         }
 
-        /**
-         * Populates the initial tree structure.
-         */
         function generateInitialTree() {
             tree = [];
-            for (let i = 0; i < VISIBLE_SEGMENTS + 1; i++) { // +1 to ensure the tree scrolls up nicely
-                tree.push(i < 2 ? BRANCH_NONE : getRandomBranch()); // Keep the first two segments clear
+            for (let i = 0; i < VISIBLE_SEGMENTS + 1; i++) { 
+                tree.push(i < 2 ? BRANCH_NONE : getRandomBranch()); 
             }
-            // Ensure the tree is long enough to meet the 100 chop requirement, 
-            // but we only render the visible parts.
         }
 
-        /**
-         * Renders the tree segments based on the current 'tree' array.
-         */
         function renderTree() {
-            treeArea.innerHTML = ''; // Clear previous segments
+            treeArea.innerHTML = ''; 
             
-            // Only render the visible segments
             for (let i = 0; i < VISIBLE_SEGMENTS; i++) {
                 const segment = document.createElement('div');
                 segment.className = 'log-segment';
-                segment.style.zIndex = VISIBLE_SEGMENTS - i; // Higher index is lower on screen
+                segment.style.zIndex = VISIBLE_SEGMENTS - i; 
 
                 const branchStatus = tree[i] || BRANCH_NONE;
 
@@ -374,15 +613,10 @@
             }
         }
 
-        /**
-         * Updates the player's position and visual.
-         */
         function updatePlayerVisual() {
-            // 스턴 상태가 아니면 일반적인 움직임 애니메이션을 실행
             if (!isStunned) {
                 playerEl.className = `player ${playerSide}`;
             
-                // Apply a slight animation to mimic chopping
                 playerEl.style.transform = playerSide === 'left' ? 'scaleX(1) translateY(-10px)' : 'scaleX(-1) translateY(-10px)';
                 setTimeout(() => {
                     playerEl.style.transform = playerSide === 'left' ? 'scaleX(1) translateY(0)' : 'scaleX(-1) translateY(0)';
@@ -390,12 +624,7 @@
             }
         }
 
-        /**
-         * Main chop logic. Executes when a key or button is pressed.
-         * @param {string} side - 'left' or 'right'
-         */
         function handleChop(side) {
-            // 게임 시작 (타이머 시작)
             if (!gameStarted) {
                 gameStarted = true;
                 gameActive = true;
@@ -404,13 +633,10 @@
                 timerInterval = setInterval(runTimer, 50);
             }
 
-            // 게임 비활성화 (게임 오버) 또는 스턴 상태일 때 베기 동작 무시
             if (!gameActive || isStunned) return;
 
-            // 1. Set new player side
             playerSide = side;
 
-            // 2. Check for collision on the bottom segment (tree[0])
             const choppingBlockBranch = tree[0] || BRANCH_NONE;
 
             let collision = false;
@@ -422,88 +648,78 @@
             }
 
             if (collision) {
-                // *** NEW: STUN PENALTY instead of Game Over ***
                 isStunned = true;
-                // gameActive = false; // <<< 이 줄을 제거하여 타이머가 계속 흐르도록 함
 
-                // 스턴 시각적 효과 적용
                 playerEl.classList.add('stunned');
                 stunMessageEl.style.display = 'block';
 
-                // 패널티: 점수 감소 (최소 0점)
-                score = Math.max(0, score - 5); 
+                // 요청에 따라 점수 감소 로직 제거
+                // score = Math.max(0, score - 5); 
                 scoreEl.textContent = `점수: ${score}`;
 
-                // 스턴 지속 시간 후 상태 해제
                 setTimeout(() => {
                     isStunned = false;
-                    // gameActive = true; // <<< 이 줄을 제거함 (gameActive는 충돌 시 변경되지 않았으므로 true 유지)
                     playerEl.classList.remove('stunned');
                     stunMessageEl.style.display = 'none';
                 }, STUN_DURATION);
                 
-                // 충돌했으므로 더 이상 진행하지 않음
                 return;
             }
 
-            // 3. Successful Chop
             score++;
             scoreEl.textContent = `점수: ${score}`;
 
-            // 4. Update Tree Structure
-            tree.shift(); // Remove the chopped segment
-            tree.push(getRandomBranch()); // Add a new segment to the top
+            tree.shift(); 
+            tree.push(getRandomBranch()); 
 
-            // 5. Visual Update (Animation)
             updatePlayerVisual();
 
-            // Animate the tree segments scrolling up (딱딱 움직임)
             const segments = treeArea.children;
             for (let i = 0; i < segments.length; i++) {
-                // 50ms 후 리렌더링 될 때까지 일시적으로 이동 트랜스폼 적용
                 segments[i].style.transform = `translateY(${SEGMENT_HEIGHT}px)`;
             }
             
-            // Re-render instantly after a very short pause (딱딱 움직임 유지)
             setTimeout(() => {
                 renderTree();
             }, 50);
 
-
-            // 6. Check Win Condition
             if (score >= TOTAL_CHOP) {
-                gameOver(true);
+                // 게임 종료 및 타이머 정지 (순위권 등록 시 게임이 멈추도록 수정)
+                gameActive = false; 
+                clearInterval(timerInterval); 
+                
+                const winTime = (Date.now() - startTime) / 1000;
+                
+                // [수정된 부분] HUD에 최종 시간을 정확하게 업데이트하여 최종 기록과 일치시킵니다.
+                timerEl.textContent = `시간: ${winTime.toFixed(2)}s`; 
+                // 최종 기록 저장
+                finalTime = winTime;
+
+                // 순위 확인 함수 호출
+                checkAndShowLeaderboard(winTime);
             }
         }
 
-        /**
-         * Handles keyboard input for chopping and restarting.
-         */
         function handleInput(event) {
-            // 스턴 상태일 때는 입력 무시
             if (isStunned) return;
 
             if (event.key === 'ArrowLeft') {
-                event.preventDefault(); // Prevent browser scrolling
+                event.preventDefault(); 
                 handleChop('left');
             } else if (event.key === 'ArrowRight') {
-                event.preventDefault(); // Prevent browser scrolling
+                event.preventDefault(); 
                 handleChop('right');
-            } else if (event.key === ' ') { // 스페이스 바를 눌렀을 때
+            } else if (event.key === ' ') { 
                 event.preventDefault();
-                // 게임이 비활성 상태이고 메시지 박스가 보일 때만 재시작
-                if (!gameActive && messageBox.style.display === 'block') {
+                // 게임이 비활성 상태이고 메시지 박스 또는 등록 모달이 보일 때 재시작
+                const isModalVisible = messageBox.style.display === 'flex' || submissionModal.style.display === 'flex';
+                if (!gameActive && isModalVisible) {
                     initGame();
                 }
             }
         }
 
-        /**
-         * Timer function: updates the HUD time.
-         */
         function runTimer() {
-            // gameActive가 false이면 타이머 업데이트 중지 (게임 시작 전 또는 게임 오버 상태)
-            // 스턴 상태에서는 gameActive가 true로 유지되므로 시간이 계속 흐름.
             if (!gameActive) return; 
             const elapsed = (Date.now() - startTime) / 1000;
             timerEl.textContent = `시간: ${elapsed.toFixed(2)}s`;
@@ -513,12 +729,18 @@
          * Initializes or resets the game state.
          */
         function initGame() {
+            // Auth/DB는 initFirebaseAndAuth에서 한 번만 호출
+            if (!db) {
+                initFirebaseAndAuth();
+            }
+
             // Reset state
             score = 0;
-            gameActive = false; // 시작 시 비활성
+            gameActive = false; 
             gameStarted = false; 
             playerSide = 'left';
-            isStunned = false; // 스턴 상태 리셋
+            isStunned = false; 
+            finalTime = 0;
 
             // Timer 초기화 및 정지
             if (timerInterval) clearInterval(timerInterval);
@@ -528,10 +750,11 @@
 
             // Reset UI
             messageBox.style.display = 'none';
-            stunMessageEl.style.display = 'none'; // 스턴 메시지 숨김
+            submissionModal.style.display = 'none';
+            stunMessageEl.style.display = 'none'; 
             scoreEl.textContent = `점수: 0`;
             playerEl.className = 'player left';
-            playerEl.classList.remove('stunned'); // 스턴 클래스 제거
+            playerEl.classList.remove('stunned'); 
 
             // Reset and render tree
             generateInitialTree();
@@ -545,27 +768,28 @@
         }
 
         /**
-         * Handles game end (Win only, as loss is now handled by stun).
-         * @param {boolean} win - True if the player won, false if crashed. (Only true is used now)
+         * Handles game end (Win only).
+         * @param {boolean} win - True if the player won.
+         * @param {boolean} alreadyQualified - 순위권 등록을 이미 했거나, 순위권 진입에 실패하여 일반 메시지를 띄울 차례인 경우 true
          */
-        function gameOver(win) {
-            gameActive = false; // <<< 게임 종료 시에만 gameActive를 false로 설정하여 타이머를 멈춤
+        function gameOver(win, alreadyQualified = false) {
+            gameActive = false; 
             clearInterval(timerInterval);
-
-            const finalTime = ((Date.now() - startTime) / 1000).toFixed(2);
             
+            // 승리 후 순위권 체크 과정에서 이미 게임이 멈췄으므로, 이 함수는 메시지 표시 역할만 함
+            // alreadyQualified가 false면 순위 체크가 진행 중이라는 의미이므로 메시지 표시를 막음
+            if (!alreadyQualified) {
+                 return;
+            }
+
+            // finalTime은 handleChop에서 이미 HUD와 일치하는 정확한 값으로 설정되었습니다.
+
             if (win) {
                 messageTitle.textContent = '🎉 게임 승리! 🎉';
                 messageTitle.style.color = '#38a169';
-                messageText.innerHTML = `나무 100개를 베는 데 성공했습니다!<br> 최종 시간: <span class="text-xl font-bold text-green-600">${finalTime}s</span>`;
-            } else {
-                // 이 경로는 현재 사용되지 않습니다. (충돌 시 스턴으로 대체)
-                messageTitle.textContent = '💥 게임 오버 💥';
-                messageTitle.style.color = '#c53030';
-                messageText.innerHTML = `오류 발생: 스턴 대신 게임 오버가 호출되었습니다.`;
+                messageText.innerHTML = `나무 100개를 베는 데 성공했습니다!<br> 최종 시간: <span class="text-xl font-bold text-green-600">${finalTime.toFixed(2)}s</span>`;
+                messageBox.style.display = 'flex';
             }
-            
-            messageBox.style.display = 'block';
         }
 
         // Initialize the game when the window loads
@@ -576,6 +800,8 @@
         // Expose functions to the global scope for HTML event handlers
         window.handleChop = handleChop;
         window.initGame = initGame;
+        window.submitScore = submitScore;
+        window.checkInputLength = checkInputLength;
         
     </script>
 </body>
