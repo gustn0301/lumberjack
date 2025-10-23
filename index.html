@@ -340,11 +340,11 @@
                 </button>
             </div>
 
-            <!-- 게임 설명 -->
+            <!-- 게임 설명 (키 바인딩 업데이트됨) -->
             <div class="instructions">
-                키보드: [←] 왼쪽 베기 | [→] 오른쪽 베기
+                키보드: **[←], [F], [Q] 왼쪽 베기** | **[→], [J], [E] 오른쪽 베기**
                 <br>
-                **스페이스 바를 눌러 재시작!**
+                **모달 창에서 [SPACE]를 눌러 재시작!**
                 <br>
                 **나뭇가지에 부딪히지 않도록 조심하세요! (충돌 시 1.5초 스턴)**
             </div>
@@ -406,7 +406,7 @@
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
         // =========================================================================
-        // 🚀 사용자님의 Firebase 설정이 여기에 통합되었습니다. (외부 환경용)
+        // 🚀 사용자님의 Firebase 설정 (외부 환경용)
         // =========================================================================
         const MANUAL_FIREBASE_CONFIG = {
             apiKey: "AIzaSyAjE98uNnl6tZmx1MG530Hj0YQzCCkNxSA",
@@ -823,19 +823,25 @@
 
         function handleInput(event) {
             const isModalOpen = messageBox.style.display === 'flex' || submissionModal.style.display === 'flex';
+            const key = event.key.toLowerCase(); // 키를 소문자로 변환하여 F/f, Q/q 등 모두 처리
 
-            if (event.key === 'ArrowLeft' && !isModalOpen) {
-                event.preventDefault(); 
-                handleChop('left');
-            } else if (event.key === 'ArrowRight' && !isModalOpen) {
-                event.preventDefault(); 
-                handleChop('right');
-            } else if (event.key === ' ' || event.key === 'Spacebar') { 
-                event.preventDefault();
-                // 모달이 열려있을 때만 스페이스바로 재시작 가능
-                if (!gameActive && isModalOpen) {
+            // 모달이 열려있을 때 스페이스바 처리 (재시작)
+            if (isModalOpen) {
+                if (key === ' ' || key === 'spacebar') { 
+                    event.preventDefault();
                     initGame();
                 }
+                return; // 모달이 열려있을 때 다른 입력은 무시
+            }
+            
+            // Left Chop Keys: ←, f, q
+            if (key === 'arrowleft' || key === 'f' || key === 'q') {
+                event.preventDefault(); 
+                handleChop('left');
+            // Right Chop Keys: →, j, e
+            } else if (key === 'arrowright' || key === 'j' || key === 'e') {
+                event.preventDefault(); 
+                handleChop('right');
             }
         }
 
