@@ -11,42 +11,41 @@
         /* 커스텀 게임 스타일링 */
         body {
             font-family: 'Jua', sans-serif;
-            background-color: #4a5568; /* Dark blue-gray background */
+            background-color: #4a5568; 
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+            overflow-x: hidden; 
         }
 
-        /* NEW: 메인 레이아웃 컨테이너 (게임 + 순위표) */
         .main-layout-container {
             display: flex;
-            flex-direction: column; /* Mobile: stack vertically */
+            flex-direction: column; 
             gap: 2rem;
             padding: 1rem;
-            align-items: flex-start; /* Align content to the start */
+            align-items: flex-start; 
             max-width: 90%;
+            width: 800px; 
         }
 
-        /* Tailwind breakpoint for desktop layout */
         @media (min-width: 768px) {
             .main-layout-container {
-                flex-direction: row; /* Desktop: side-by-side */
+                flex-direction: row; 
                 gap: 3rem;
                 padding: 2rem;
                 align-items: flex-start;
+                justify-content: center;
             }
         }
 
-        /* 기존 게임 컨테이너 (이제 순위표를 포함하지 않음) */
         .game-container {
             background-color: #fff;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             border-radius: 1rem;
-            padding: 1.5rem; /* Padding increased */
-            width: 380px; /* Fixed width for the game panel */
+            padding: 1.5rem; 
+            width: 380px; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -54,7 +53,6 @@
             flex-shrink: 0;
         }
 
-        /* HUD & Score */
         .hud {
             width: 100%;
             display: flex;
@@ -68,7 +66,7 @@
         }
 
         .hud div {
-            font-size: 1.35rem; /* Slightly larger text */
+            font-size: 1.35rem; 
             font-weight: bold;
             color: #9c4221; 
         }
@@ -81,7 +79,6 @@
             flex-direction: column-reverse; 
         }
 
-        /* Tree Segment Styling */
         .log-segment {
             height: 50px; 
             width: 100px;
@@ -94,7 +91,6 @@
             background-color: #7a4026; 
         }
 
-        /* Branch Styling */
         .branch {
             position: absolute;
             top: 0;
@@ -119,7 +115,6 @@
             transform: rotate(10deg);
         }
 
-        /* Player Styling */
         .player-area {
             width: 100%;
             height: 80px;
@@ -149,7 +144,6 @@
         }
 
         @keyframes shake {
-            /* ... (keyframe animation content is unchanged) ... */
             0% { transform: translate(1px, 1px) rotate(0deg); }
             10% { transform: translate(-1px, -2px) rotate(-1deg); }
             20% { transform: translate(-3px, 0px) rotate(1deg); }
@@ -163,7 +157,6 @@
             100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
 
-        /* Stun Message */
         #stun-message {
             position: absolute;
             bottom: 60px; 
@@ -181,19 +174,17 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        /* Game Messages & Modals */
-        /* 모달이 전체 화면을 덮도록 수정 */
         .modal-overlay {
-            position: fixed; /* Use fixed to cover the entire viewport */
+            position: fixed; 
             top: 0;
             left: 0;
             width: 100vw; 
             height: 100vh;
-            background-color: rgba(0, 0, 0, 0.7); /* Darker background */
+            background-color: rgba(0, 0, 0, 0.7); 
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 999; /* Highest Z-index */
+            z-index: 999; 
         }
 
         .modal-content {
@@ -203,10 +194,20 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             text-align: center;
             max-width: 90%;
-            width: 350px; /* Slightly wider modal */
+            width: 350px; 
+        }
+        
+        #player-name-input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 2px solid #ccc;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-family: 'Jua', sans-serif;
         }
 
-        /* Button Styling */
         .control-buttons {
             display: flex;
             justify-content: space-around;
@@ -246,9 +247,8 @@
             text-align: center;
         }
 
-        /* NEW: Leaderboard Panel Styling */
         .leaderboard-panel {
-            width: 380px; /* Fixed width to match game container */
+            width: 380px; 
             max-width: 90%;
             background-color: #f7fafc;
             border-radius: 1rem;
@@ -284,9 +284,19 @@
             font-size: 1.1rem;
         }
 
-        .leaderboard-item.rank-1 { background-color: #ffeb3b; font-weight: bold; color: #333; } /* Gold */
-        .leaderboard-item.rank-2 { background-color: #e0e0e0; font-weight: bold; color: #333; } /* Silver */
-        .leaderboard-item.rank-3 { background-color: #f0e68c; font-weight: bold; color: #333; } /* Bronze - Darker khaki */
+        .leaderboard-item.rank-1 { background-color: #ffeb3b; font-weight: bold; color: #333; } 
+        .leaderboard-item.rank-2 { background-color: #e0e0e0; font-weight: bold; color: #333; } 
+        .leaderboard-item.rank-3 { background-color: #f0e68c; font-weight: bold; color: #333; } 
+
+        .leaderboard-warning {
+             background-color: #fefcbf;
+             color: #9c4221;
+             padding: 0.5rem;
+             border-radius: 0.5rem;
+             text-align: center;
+             font-size: 0.9rem;
+             margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -341,13 +351,16 @@
         </div>
 
         <!-- ============================================== -->
-        <!-- RIGHT PANEL: LEADERBOARD AREA (Extracted) -->
+        <!-- RIGHT PANEL: LEADERBOARD AREA -->
         <!-- ============================================== -->
         <div class="leaderboard-panel">
             <h3>🏆 순위표 (Top 3)</h3>
+            <div id="leaderboard-status" class="leaderboard-warning">
+                순위표 로딩 중...
+            </div>
             <ul id="leaderboard-list" class="leaderboard-list">
                 <!-- 순위 데이터가 여기에 렌더링됩니다 -->
-                <li class="p-2 text-gray-500 text-center">로딩 중...</li>
+                <li class="p-2 text-gray-500 text-center">초기화 중...</li>
             </ul>
         </div>
         
@@ -378,25 +391,42 @@
     </div>
 
     <script type="module">
-        // Firebase Imports
+        // Firebase Imports (Firebase JS SDK v11.6.1)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global Firebase Variables
+        // Global Firebase/State Variables
         let db;
         let auth;
         let userId;
+        let isFirebaseReady = false; // Firebase 사용 가능 여부 플래그
+        
+        // __app_id는 환경에서 자동 주입되며, 없으면 'default-app-id'를 사용합니다.
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
+        // =========================================================================
+        // 🚀 사용자님의 Firebase 설정이 여기에 통합되었습니다. (외부 환경용)
+        // =========================================================================
+        const MANUAL_FIREBASE_CONFIG = {
+            apiKey: "AIzaSyAjE98uNnl6tZmx1MG530Hj0YQzCCkNxSA",
+            authDomain: "lumberjack-re-derboard.firebaseapp.com",
+            projectId: "lumberjack-re-derboard",
+            storageBucket: "lumberjack-re-derboard.firebasestorage.app",
+            messagingSenderId: "929337159569",
+            appId: "1:929337159569:web:58d10b078c6b176cae7430"
+        };
+        // =========================================================================
+        
         // Game State Variables
         const TOTAL_CHOP = 100;
         const VISIBLE_SEGMENTS = 7; 
-        const SEGMENT_HEIGHT = 50; 
-
         const BRANCH_NONE = 0;
         const BRANCH_LEFT = 1;
         const BRANCH_RIGHT = 2;
+        const SEGMENT_HEIGHT = 50; 
+        const STUN_DURATION = 1500; 
+        const LEADERBOARD_SIZE = 3;
 
         let score = 0;
         let gameActive = false;
@@ -406,8 +436,6 @@
         let playerSide = 'left'; 
         let isStunned = false; 
         let finalTime = 0; 
-        const STUN_DURATION = 1500; 
-
         let tree = []; 
 
         // DOM Elements
@@ -423,18 +451,73 @@
         const playerNameInput = document.getElementById('player-name-input'); 
         const timeToSubmitEl = document.getElementById('time-to-submit'); 
         const leaderboardListEl = document.getElementById('leaderboard-list'); 
+        const leaderboardStatusEl = document.getElementById('leaderboard-status');
 
-        // --- Firebase/Auth/Leaderboard Functions ---
+        // --- Local Storage Helper Functions (Fallback) ---
+
+        /**
+         * 로컬 저장소에서 점수 목록을 불러와서 정렬하고 상위 3개만 반환합니다.
+         * @returns {Array<{name: string, time: number}>}
+         */
+        function getLocalScores() {
+            try {
+                const scores = JSON.parse(localStorage.getItem('lumberjack_scores')) || [];
+                // 시간을 기준으로 오름차순 정렬 (낮은 시간이 좋은 기록)
+                return scores.sort((a, b) => a.time - b.time).slice(0, LEADERBOARD_SIZE);
+            } catch (e) {
+                console.error("로컬 저장소 불러오기 오류:", e);
+                return [];
+            }
+        }
+
+        /**
+         * 새로운 점수를 로컬 저장소에 저장하고 순위표를 업데이트합니다.
+         * @param {string} name 
+         * @param {number} time 
+         */
+        function saveLocalScore(name, time) {
+            const scores = JSON.parse(localStorage.getItem('lumberjack_scores')) || [];
+            scores.push({ name: name, time: time, timestamp: Date.now() });
+            
+            // 상위 3개만 남깁니다.
+            const topScores = scores.sort((a, b) => a.time - b.time).slice(0, LEADERBOARD_SIZE);
+            localStorage.setItem('lumberjack_scores', JSON.stringify(topScores));
+            renderLeaderboard(topScores);
+        }
+        
+        // --- Firebase/Auth Initialization ---
 
         async function initFirebaseAndAuth() {
+            let firebaseConfig = null;
+            let initialAuthToken = null;
+
             try {
-                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+                // 1. Canvas 환경 변수 확인 (플랫폼 실행 시 주입됨)
+                const firebaseConfigStr = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
+                initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                
+                if (firebaseConfigStr) {
+                     // Canvas 환경에서 실행 중: 주입된 변수 사용
+                     firebaseConfig = JSON.parse(firebaseConfigStr);
+                     console.log("Firebase: Canvas 환경 변수를 사용하여 초기화합니다.");
+                } else if (MANUAL_FIREBASE_CONFIG.apiKey) {
+                     // 외부 환경에서 실행 중: 사용자 직접 설정 사용
+                     firebaseConfig = MANUAL_FIREBASE_CONFIG;
+                     console.log("Firebase: 수동 설정을 사용하여 초기화합니다.");
+                } else {
+                     // 설정 정보 없음
+                     throw new Error("Firebase 구성 정보를 찾을 수 없거나 제공되지 않았습니다.");
+                }
+                
+                if (!firebaseConfig) {
+                    throw new Error("Firebase 구성 정보가 유효하지 않습니다.");
+                }
+
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
 
-                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
+                // 인증 시도 (Custom Token 또는 익명 로그인)
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
@@ -442,26 +525,35 @@
                 }
 
                 userId = auth.currentUser?.uid || crypto.randomUUID();
+                isFirebaseReady = true;
+                leaderboardStatusEl.textContent = `순위표: Firebase 연결됨. (사용자 ID: ${userId.substring(0, 4)}...)`;
                 
                 setupLeaderboardListener();
             } catch (error) {
-                console.error("Firebase 초기화 또는 인증 오류:", error);
-                leaderboardListEl.innerHTML = '<li class="p-2 text-red-500 text-center">순위표 로딩 실패: Firebase 오류</li>';
+                // Firebase 연결 실패 시 로컬 저장소로 전환
+                console.warn("Firebase 연결 실패. 로컬 저장소로 대체합니다:", error.message);
+                leaderboardStatusEl.textContent = '순위표: 로컬 저장소 사용 중 (Firebase 연결 실패)';
+                isFirebaseReady = false; 
+                renderLocalLeaderboard(); // 로컬 순위표 표시
             }
         }
 
-        // Leaderboard Collection Path: Public data for sharing
+        // Leaderboard Collection Path (Firebase)
         function getLeaderboardCollection() {
+            // Firestore 보안 규칙에 따라 공용 데이터 경로를 사용합니다.
+            // App ID를 포함하여 다른 앱과 데이터를 분리합니다.
             return collection(db, `artifacts/${appId}/public/data/high_scores`);
         }
 
+        /**
+         * Firebase 순위표에 실시간 리스너를 설정하고 화면에 렌더링합니다.
+         */
         function setupLeaderboardListener() {
-            if (!db) return;
+            if (!isFirebaseReady || !db) return;
 
-            // 시간을 기준으로 오름차순 정렬하여 상위 3개만 가져옴
-            const q = query(getLeaderboardCollection(), orderBy('time', 'asc'), limit(3));
+            const q = query(getLeaderboardCollection(), orderBy('time', 'asc'), limit(LEADERBOARD_SIZE));
 
-            // 실시간 리스너 설정
+            // onSnapshot을 사용하여 실시간으로 데이터를 수신합니다.
             onSnapshot(q, (snapshot) => {
                 const scores = [];
                 snapshot.forEach((doc) => {
@@ -469,48 +561,70 @@
                 });
                 renderLeaderboard(scores);
             }, (error) => {
-                console.error("순위표 실시간 업데이트 오류:", error);
-                leaderboardListEl.innerHTML = '<li class="p-2 text-red-500 text-center">순위표 실시간 오류</li>';
+                console.error("Firebase 순위표 실시간 업데이트 오류:", error);
+                leaderboardStatusEl.textContent = '순위표: Firebase 실시간 오류. 로컬 저장소로 대체.';
+                isFirebaseReady = false; // 리스너 오류 시 Firebase 비활성화
+                renderLocalLeaderboard();
             });
         }
+        
+        /**
+         * 로컬 순위표를 불러와 화면에 렌더링합니다.
+         */
+        function renderLocalLeaderboard() {
+            const scores = getLocalScores();
+            renderLeaderboard(scores);
+        }
 
+        // --- Score Submission Logic (Hybrid) ---
+
+        /**
+         * 새로운 기록이 순위권에 드는지 확인하고, 모달을 표시합니다.
+         * @param {number} newTime 
+         */
         async function checkAndShowLeaderboard(newTime) {
-            if (!db) {
-                // Firebase 오류 시 일반 승리 메시지 표시
-                gameOver(true, true); 
-                return;
-            }
+            let qualifies = false;
 
-            try {
-                // 현재 상위 3개 기록을 가져옴 (실시간 리스너와 분리)
-                const q = query(getLeaderboardCollection(), orderBy('time', 'asc'), limit(3));
-                const snapshot = await getDocs(q);
-                const currentScores = snapshot.docs.map(doc => doc.data());
-
-                let qualifies = false;
-
-                if (currentScores.length < 3) {
-                    qualifies = true;
-                } else {
-                    const thirdPlaceTime = currentScores[2].time;
-                    if (newTime < thirdPlaceTime) {
+            // 1. 순위권 진입 여부 확인 (Firebase가 준비되면 Firebase, 아니면 로컬 저장소 사용)
+            if (isFirebaseReady && db) {
+                // Firebase 순위 확인
+                try {
+                    const q = query(getLeaderboardCollection(), orderBy('time', 'asc'), limit(LEADERBOARD_SIZE));
+                    const snapshot = await getDocs(q);
+                    const currentScores = snapshot.docs.map(doc => doc.data());
+                    
+                    // 순위표가 꽉 차지 않았거나, 새로운 기록이 가장 낮은 순위보다 좋을 경우
+                    if (currentScores.length < LEADERBOARD_SIZE || newTime < currentScores[currentScores.length - 1].time) {
                         qualifies = true;
                     }
+                } catch (error) {
+                    console.warn("Firebase 순위 확인 중 오류 발생. 로컬 순위 확인으로 대체.", error);
+                    qualifies = checkLocalQualification(newTime);
                 }
-                
-                if (qualifies) {
-                    finalTime = newTime; 
-                    showSubmissionModal();
-                } else {
-                    // 순위권이 아니면 일반 승리 메시지 표시
-                    gameOver(true, true); 
-                }
-            } catch (error) {
-                console.error("순위 확인 오류:", error);
-                // 오류 발생 시 일반 승리 메시지 표시
-                gameOver(true, true);
+            } else {
+                // 로컬 저장소 순위 확인
+                qualifies = checkLocalQualification(newTime);
+            }
+
+            if (qualifies) {
+                finalTime = newTime; 
+                showSubmissionModal(); // 순위권이면 모달 표시
+            } else {
+                gameOver(true, true); // 순위권 아니면 일반 승리 메시지 표시
             }
         }
+        
+        /**
+         * 로컬 저장소 데이터를 기준으로 순위권 진입 여부를 확인합니다.
+         * @param {number} newTime 
+         * @returns {boolean}
+         */
+        function checkLocalQualification(newTime) {
+             const localScores = getLocalScores();
+             // 순위표가 꽉 차지 않았거나, 새로운 기록이 가장 낮은 순위보다 좋을 경우
+             return localScores.length < LEADERBOARD_SIZE || newTime < localScores[localScores.length - 1].time;
+        }
+
 
         function showSubmissionModal() {
             submissionModal.style.display = 'flex';
@@ -520,40 +634,34 @@
             playerNameInput.focus();
         }
 
-        function checkInputLength(input) {
-            // 최대 3자로 제한
-            if (input.value.length > 3) {
-                input.value = input.value.substring(0, 3);
-            }
-        }
-
         async function submitScore() {
             const name = playerNameInput.value.trim() || '익명';
-            
-            if (!db) {
-                console.error("Firestore가 초기화되지 않았습니다.");
-                return;
-            }
+            const submitButton = submissionModal.querySelector('.chop-button');
+            submitButton.disabled = true;
 
             try {
-                // 이름 등록 버튼을 비활성화하여 중복 제출 방지
-                const submitButton = submissionModal.querySelector('.chop-button');
-                submitButton.disabled = true;
-
-                await addDoc(getLeaderboardCollection(), {
-                    name: name,
-                    time: finalTime,
-                    userId: userId,
-                    timestamp: Date.now()
-                });
+                if (isFirebaseReady && db) {
+                    // Firebase 등록
+                    await addDoc(getLeaderboardCollection(), {
+                        name: name,
+                        time: finalTime,
+                        userId: userId,
+                        timestamp: Date.now()
+                    });
+                } else {
+                    // Local Storage 등록
+                    saveLocalScore(name, finalTime);
+                }
                 
                 submissionModal.style.display = 'none';
-                gameOver(true, true); // 등록 후 일반 승리 메시지 표시
-                submitButton.disabled = false;
+                gameOver(true, true); 
             } catch (e) {
                 console.error("점수 등록 오류: ", e);
+                // 오류가 발생해도 모달은 닫고 게임 오버 처리
                 submissionModal.style.display = 'none';
                 gameOver(true, true); 
+            } finally {
+                submitButton.disabled = false;
             }
         }
 
@@ -591,12 +699,11 @@
             const rand = Math.random();
             if (rand < 0.2) return BRANCH_LEFT;
             if (rand < 0.4) return BRANCH_RIGHT;
-            return BRANCH_NONE; // 60% chance of no branch
+            return BRANCH_NONE; 
         }
 
         function generateInitialTree() {
             tree = [];
-            // 나무 맨 아래 두 칸은 항상 나뭇가지 없음
             for (let i = 0; i < VISIBLE_SEGMENTS + 1; i++) { 
                 tree.push(i < 2 ? BRANCH_NONE : getRandomBranch()); 
             }
@@ -629,7 +736,7 @@
             if (!isStunned) {
                 playerEl.className = `player ${playerSide}`;
             
-                // 도끼 애니메이션 (약간의 상하 움직임)
+                // 캐릭터가 잠시 위로 올라갔다가 내려오는 모션 (베는 동작 시뮬레이션)
                 playerEl.style.transform = playerSide === 'left' ? 'scaleX(1) translateY(-10px)' : 'scaleX(-1) translateY(-10px)';
                 setTimeout(() => {
                     playerEl.style.transform = playerSide === 'left' ? 'scaleX(1) translateY(0)' : 'scaleX(-1) translateY(0)';
@@ -638,7 +745,7 @@
         }
 
         function handleChop(side) {
-            // 게임 시작 (첫 번째 베기 시점)
+            // 게임 시작: 첫 번째 입력 시 타이머 시작
             if (!gameStarted) {
                 gameStarted = true;
                 gameActive = true;
@@ -673,24 +780,30 @@
                     stunMessageEl.style.display = 'none';
                 }, STUN_DURATION);
                 
-                return;
+                return; // 충돌 시 점수 증가 및 나무 이동 방지
             }
 
             score++;
             scoreEl.textContent = `점수: ${score}`;
 
+            // 나무를 한 칸 내리고, 새 조각을 추가
             tree.shift(); 
             tree.push(getRandomBranch()); 
 
             updatePlayerVisual();
 
-            // 나무를 베는 애니메이션 효과 (부드러운 이동을 위해 setTimeout 사용)
+            // 애니메이션을 위해 잠시 이동 효과 적용
             const segments = treeArea.children;
             for (let i = 0; i < segments.length; i++) {
+                segments[i].style.transition = 'transform 0.05s linear';
                 segments[i].style.transform = `translateY(${SEGMENT_HEIGHT}px)`;
             }
             
+            // 애니메이션 완료 후 실제 렌더링 업데이트
             setTimeout(() => {
+                for (let i = 0; i < segments.length; i++) {
+                    segments[i].style.transition = 'none';
+                }
                 renderTree();
             }, 50);
 
@@ -700,17 +813,15 @@
                 
                 const winTime = (Date.now() - startTime) / 1000;
                 
-                // [요청에 따른 수정]: HUD에 최종 시간을 정확하게 업데이트하여 기록과 일치
                 timerEl.textContent = `시간: ${winTime.toFixed(2)}s`; 
                 finalTime = winTime;
 
-                // 순위 확인 함수 호출
+                // 순위 확인 함수 호출 (이 함수가 모달을 띄울지 일반 종료 메시지를 띄울지 결정)
                 checkAndShowLeaderboard(winTime);
             }
         }
 
         function handleInput(event) {
-            // 모달이 열려 있을 때는 키보드 입력을 무시 (스페이스바 재시작 제외)
             const isModalOpen = messageBox.style.display === 'flex' || submissionModal.style.display === 'flex';
 
             if (event.key === 'ArrowLeft' && !isModalOpen) {
@@ -719,9 +830,9 @@
             } else if (event.key === 'ArrowRight' && !isModalOpen) {
                 event.preventDefault(); 
                 handleChop('right');
-            } else if (event.key === ' ') { 
+            } else if (event.key === ' ' || event.key === 'Spacebar') { 
                 event.preventDefault();
-                // 게임이 비활성 상태이고 모달이 보일 때만 재시작
+                // 모달이 열려있을 때만 스페이스바로 재시작 가능
                 if (!gameActive && isModalOpen) {
                     initGame();
                 }
@@ -734,10 +845,8 @@
             timerEl.textContent = `시간: ${elapsed.toFixed(2)}s`;
         }
 
-        /**
-         * Initializes or resets the game state.
-         */
         function initGame() {
+            // Firebase와 Auth 초기화는 게임이 시작될 때 한 번만 시도합니다.
             if (!db) {
                 initFirebaseAndAuth();
             }
@@ -768,23 +877,23 @@
             generateInitialTree();
             renderTree();
             
-            // Add input listener (only once)
+            // 이벤트 리스너 중복 방지
             document.removeEventListener('keydown', handleInput);
             document.addEventListener('keydown', handleInput);
+
+            // 초기 로딩 시 순위표를 한 번 렌더링합니다.
+            if (!isFirebaseReady) {
+                 renderLocalLeaderboard();
+            }
 
             console.log('Game initialized and ready.');
         }
 
-        /**
-         * Handles game end (Win only).
-         * @param {boolean} win - True if the player won.
-         * @param {boolean} alreadyHandled - 순위 확인/등록 과정을 거쳐 최종 메시지를 띄울 차례인 경우 true
-         */
         function gameOver(win, alreadyHandled = false) {
             gameActive = false; 
             clearInterval(timerInterval);
             
-            // 순위 확인 중이거나 (alreadyHandled=false), 승리하지 못한 경우 메시지 표시를 막음
+            // 순위 확인 모달이 이미 처리했는지 확인합니다.
             if (!alreadyHandled) {
                  return;
             }
@@ -806,7 +915,12 @@
         window.handleChop = handleChop;
         window.initGame = initGame;
         window.submitScore = submitScore;
-        window.checkInputLength = checkInputLength;
+        window.checkInputLength = (input) => {
+             // 최대 3자로 제한
+            if (input.value.length > 3) {
+                input.value = input.value.substring(0, 3);
+            }
+        };
         
     </script>
 </body>
