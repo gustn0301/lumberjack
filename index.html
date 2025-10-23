@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lumber Jack</title>
+    <!-- 🪓 도끼 모양 파비콘 추가 -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪓</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
@@ -342,7 +344,7 @@
 
             <!-- 게임 설명 (키 바인딩 업데이트됨) -->
             <div class="instructions">
-                키보드: **[←], [F], [Q] 왼쪽 베기** | **[→], [J], [E] 오른쪽 베기**
+                키보드: **[←], [F] 왼쪽 베기** | **[→], [J] 오른쪽 베기**
                 <br>
                 **모달 창에서 [SPACE]를 눌러 재시작!**
                 <br>
@@ -823,7 +825,7 @@
 
         function handleInput(event) {
             const isModalOpen = messageBox.style.display === 'flex' || submissionModal.style.display === 'flex';
-            const key = event.key.toLowerCase(); // 키를 소문자로 변환하여 F/f, Q/q 등 모두 처리
+            const key = event.key.toLowerCase(); // 키를 소문자로 변환하여 F/f, J/j 등 모두 처리
 
             // 모달이 열려있을 때 스페이스바 처리 (재시작)
             if (isModalOpen) {
@@ -834,12 +836,12 @@
                 return; // 모달이 열려있을 때 다른 입력은 무시
             }
             
-            // Left Chop Keys: ←, f, q
-            if (key === 'arrowleft' || key === 'f' || key === 'q') {
+            // Left Chop Keys: ←, f (Q 제거됨)
+            if (key === 'arrowleft' || key === 'f') {
                 event.preventDefault(); 
                 handleChop('left');
-            // Right Chop Keys: →, j, e
-            } else if (key === 'arrowright' || key === 'j' || key === 'e') {
+            // Right Chop Keys: →, j (E 제거됨)
+            } else if (key === 'arrowright' || key === 'j') {
                 event.preventDefault(); 
                 handleChop('right');
             }
