@@ -17,20 +17,41 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            overflow: hidden;
+            overflow-x: hidden; /* Prevent horizontal scroll on mobile */
         }
 
+        /* NEW: 메인 레이아웃 컨테이너 (게임 + 순위표) */
+        .main-layout-container {
+            display: flex;
+            flex-direction: column; /* Mobile: stack vertically */
+            gap: 2rem;
+            padding: 1rem;
+            align-items: flex-start; /* Align content to the start */
+            max-width: 90%;
+        }
+
+        /* Tailwind breakpoint for desktop layout */
+        @media (min-width: 768px) {
+            .main-layout-container {
+                flex-direction: row; /* Desktop: side-by-side */
+                gap: 3rem;
+                padding: 2rem;
+                align-items: flex-start;
+            }
+        }
+
+        /* 기존 게임 컨테이너 (이제 순위표를 포함하지 않음) */
         .game-container {
             background-color: #fff;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             border-radius: 1rem;
-            padding: 1rem;
-            max-width: 400px;
-            width: 90%;
+            padding: 1.5rem; /* Padding increased */
+            width: 380px; /* Fixed width for the game panel */
             display: flex;
             flex-direction: column;
             align-items: center;
             position: relative;
+            flex-shrink: 0;
         }
 
         /* HUD & Score */
@@ -39,40 +60,38 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
-            padding: 0.5rem 1rem;
-            background-color: #fbd38d; /* Light orange for score panel */
+            margin-bottom: 1.25rem;
+            padding: 0.75rem 1rem;
+            background-color: #fbd38d; 
             border-radius: 0.5rem;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .hud div {
-            font-size: 1.25rem;
+            font-size: 1.35rem; /* Slightly larger text */
             font-weight: bold;
-            color: #9c4221; /* Darker brown text */
+            color: #9c4221; 
         }
 
         .tree-area {
             position: relative;
-            height: 350px; /* Fixed height for visible tree segments */
-            width: 100px; /* Fixed width for the trunk */
-            /* overflow: hidden; <--- 이 부분을 제거했습니다. */
+            height: 350px; 
+            width: 100px; 
             display: flex;
-            flex-direction: column-reverse; /* Segments appear from bottom up */
+            flex-direction: column-reverse; 
         }
 
         /* Tree Segment Styling */
         .log-segment {
-            height: 50px; /* 7 visible segments = 350px height */
+            height: 50px; 
             width: 100px;
-            background-color: #8a482d; /* Tree trunk color */
+            background-color: #8a482d; 
             border-bottom: 2px solid #5d311d;
             position: relative;
-            /* transition: transform 0.15s ease-out; <-- 부드러운 움직임을 위해 제거 */
             flex-shrink: 0;
         }
         .log-segment:nth-child(even) {
-            background-color: #7a4026; /* Slightly darker stripe */
+            background-color: #7a4026; 
         }
 
         /* Branch Styling */
@@ -85,7 +104,7 @@
         }
 
         .branch::before {
-            content: '🌿'; /* Branch/Leaf visual */
+            content: '🌿'; 
             position: absolute;
             font-size: 30px;
         }
@@ -110,7 +129,7 @@
         .player {
             position: absolute;
             bottom: 0;
-            font-size: 60px; /* Tree segment is 50px, player is 60px for visibility */
+            font-size: 60px; 
             transition: left 0.1s ease-out, transform 0.1s ease-out;
             z-index: 10;
         }
@@ -121,16 +140,16 @@
         }
         .player.right {
             right: 20px;
-            transform: scaleX(-1); /* Flip axe/emoji horizontally */
+            transform: scaleX(-1); 
         }
         
-        /* 스턴 상태 스타일 (NEW) */
         .player.stunned {
             opacity: 0.5;
-            animation: shake 0.1s infinite; /* 더 빠르고 딱딱한 움직임 */
+            animation: shake 0.1s infinite; 
         }
 
         @keyframes shake {
+            /* ... (keyframe animation content is unchanged) ... */
             0% { transform: translate(1px, 1px) rotate(0deg); }
             10% { transform: translate(-1px, -2px) rotate(-1deg); }
             20% { transform: translate(-3px, 0px) rotate(1deg); }
@@ -144,10 +163,10 @@
             100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
 
-        /* 스턴 메시지 스타일 */
+        /* Stun Message */
         #stun-message {
             position: absolute;
-            bottom: 60px; /* Above the player area */
+            bottom: 60px; 
             left: 50%;
             transform: translateX(-50%);
             background-color: #ffc107;
@@ -163,51 +182,28 @@
         }
 
         /* Game Messages & Modals */
+        /* 모달이 전체 화면을 덮도록 수정 */
         .modal-overlay {
-            position: absolute;
+            position: fixed; /* Use fixed to cover the entire viewport */
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+            width: 100vw; 
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.7); /* Darker background */
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 30;
+            z-index: 999; /* Highest Z-index */
         }
 
         .modal-content {
             background-color: #fff;
             padding: 2rem;
             border-radius: 0.75rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             text-align: center;
             max-width: 90%;
-            width: 300px;
-        }
-
-        #message-box {
-            display: none; /* Initial state */
-        }
-
-        #submission-modal {
-            display: none; /* Initial state */
-        }
-
-        #submission-modal input {
-            padding: 0.5rem;
-            border: 2px solid #ccc;
-            border-radius: 0.5rem;
-            width: 100%;
-            margin-bottom: 1rem;
-            font-family: sans-serif;
-            text-align: center;
-        }
-
-        #message-box h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: #c53030;
+            width: 350px; /* Slightly wider modal */
         }
 
         /* Button Styling */
@@ -215,12 +211,12 @@
             display: flex;
             justify-content: space-around;
             width: 100%;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
         }
 
         .chop-button {
             padding: 0.75rem 1.5rem;
-            background-color: #48bb78; /* Green for action */
+            background-color: #48bb78; 
             color: white;
             border: none;
             border-radius: 0.5rem;
@@ -250,19 +246,24 @@
             text-align: center;
         }
 
-        /* Leaderboard Styling */
-        .leaderboard {
-            width: 100%;
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px dashed #ccc;
-            text-align: center;
+        /* NEW: Leaderboard Panel Styling */
+        .leaderboard-panel {
+            width: 380px; /* Fixed width to match game container */
+            max-width: 90%;
+            background-color: #f7fafc;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
         }
 
-        .leaderboard h3 {
-            font-size: 1.5rem;
+        .leaderboard-panel h3 {
+            font-size: 2rem;
             color: #9c4221;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            border-bottom: 3px solid #fbd38d;
+            padding-bottom: 0.5rem;
         }
 
         .leaderboard-list {
@@ -275,74 +276,89 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 0.75rem;
-            margin-bottom: 0.25rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
             border-radius: 0.5rem;
-            background-color: #f7fafc;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            font-size: 1.1rem;
         }
 
-        .leaderboard-item.rank-1 { background-color: #ffeb3b; font-weight: bold; } /* Gold */
-        .leaderboard-item.rank-2 { background-color: #c0c0c0; font-weight: bold; } /* Silver */
-        .leaderboard-item.rank-3 { background-color: #cd7f32; color: white; font-weight: bold; } /* Bronze */
+        .leaderboard-item.rank-1 { background-color: #ffeb3b; font-weight: bold; color: #333; } /* Gold */
+        .leaderboard-item.rank-2 { background-color: #e0e0e0; font-weight: bold; color: #333; } /* Silver */
+        .leaderboard-item.rank-3 { background-color: #f0e68c; font-weight: bold; color: #333; } /* Bronze - Darker khaki */
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <!-- 게임 상태 표시 영역 (HUD) -->
-        <div class="hud">
-            <div>목표: 100점</div>
-            <div id="score">점수: 0</div>
-            <div id="timer">시간: 0.00s</div>
-        </div>
+    <div class="main-layout-container">
+        
+        <!-- ============================================== -->
+        <!-- LEFT PANEL: GAME AREA -->
+        <!-- ============================================== -->
+        <div class="game-container">
+            <!-- 게임 상태 표시 영역 (HUD) -->
+            <div class="hud">
+                <div>목표: 100점</div>
+                <div id="score">점수: 0</div>
+                <div id="timer">시간: 0.00s</div>
+            </div>
 
-        <!-- 나무 영역 -->
-        <div class="flex justify-center w-full">
-            <div class="tree-area" id="tree-area">
-                <!-- 나무 몸통 조각들이 여기에 JS로 삽입됩니다 -->
+            <!-- 나무 영역 -->
+            <div class="flex justify-center w-full">
+                <div class="tree-area" id="tree-area">
+                    <!-- 나무 몸통 조각들이 여기에 JS로 삽입됩니다 -->
+                </div>
+            </div>
+            
+            <!-- 나무꾼 영역 -->
+            <div class="player-area">
+                <div id="player" class="player left">
+                    <!-- 나무꾼 캐릭터 (도끼 이모지) -->
+                    🪓
+                </div>
+                <!-- 스턴 메시지 추가 -->
+                <div id="stun-message" style="display: none;">😵‍💫 STUNNED!</div>
+            </div>
+
+            <!-- 모바일 터치 버튼 (데스크탑은 키보드 사용) -->
+            <div class="control-buttons md:hidden">
+                <button class="chop-button left" onclick="handleChop('left')">
+                    <span class="text-3xl">←</span> 왼쪽 베기
+                </button>
+                <button class="chop-button right" onclick="handleChop('right')">
+                    오른쪽 베기 <span class="text-3xl">→</span>
+                </button>
+            </div>
+
+            <!-- 게임 설명 -->
+            <div class="instructions">
+                키보드: [←] 왼쪽 베기 | [→] 오른쪽 베기
+                <br>
+                **스페이스 바를 눌러 재시작!**
+                <br>
+                **나뭇가지에 부딪히지 않도록 조심하세요! (충돌 시 1.5초 스턴)**
             </div>
         </div>
-        
-        <!-- 나무꾼 영역 -->
-        <div class="player-area">
-            <div id="player" class="player left">
-                <!-- 나무꾼 캐릭터 (도끼 이모지) -->
-                🪓
-            </div>
-            <!-- 스턴 메시지 추가 -->
-            <div id="stun-message" style="display: none;">😵‍💫 STUNNED!</div>
-        </div>
 
-        <!-- 모바일 터치 버튼 (데스크탑은 키보드 사용) -->
-        <div class="control-buttons md:hidden">
-            <button class="chop-button left" onclick="handleChop('left')">
-                <span class="text-3xl">←</span> 왼쪽 베기
-            </button>
-            <button class="chop-button right" onclick="handleChop('right')">
-                오른쪽 베기 <span class="text-3xl">→</span>
-            </button>
-        </div>
-
-        <!-- 게임 설명 -->
-        <div class="instructions">
-            키보드: [←] 왼쪽 베기 | [→] 오른쪽 베기
-            <br>
-            **스페이스 바를 눌러 재시작!**
-            <br>
-            **나뭇가지에 부딪히지 않도록 조심하세요! (충돌 시 1.5초 스턴)**
-        </div>
-        
-        <!-- 순위표 영역 (NEW) -->
-        <div class="leaderboard">
+        <!-- ============================================== -->
+        <!-- RIGHT PANEL: LEADERBOARD AREA (Extracted) -->
+        <!-- ============================================== -->
+        <div class="leaderboard-panel">
             <h3>🏆 순위표 (Top 3)</h3>
             <ul id="leaderboard-list" class="leaderboard-list">
                 <!-- 순위 데이터가 여기에 렌더링됩니다 -->
-                <li class="p-2 text-gray-500">로딩 중...</li>
+                <li class="p-2 text-gray-500 text-center">로딩 중...</li>
             </ul>
         </div>
+        
     </div>
 
+    <!-- ============================================== -->
+    <!-- MODALS (Fixed position for overlay) -->
+    <!-- ============================================== -->
+
     <!-- 메시지 박스 (게임 오버 / 승리) -->
-    <div id="message-box" class="modal-overlay">
+    <div id="message-box" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <h2 id="message-title"></h2>
             <p id="message-text" class="text-lg mb-4"></p>
@@ -350,8 +366,8 @@
         </div>
     </div>
 
-    <!-- 점수 등록 모달 (NEW) -->
-    <div id="submission-modal" class="modal-overlay">
+    <!-- 점수 등록 모달 -->
+    <div id="submission-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <h2 class="text-2xl mb-2 text-green-600">🎉 축하합니다! 순위권 기록!</h2>
             <p class="mb-4 text-gray-700">이름을 등록하고 순위표에 올라보세요.</p>
@@ -389,7 +405,7 @@
         let timerInterval = null;
         let playerSide = 'left'; 
         let isStunned = false; 
-        let finalTime = 0; // NEW: 최종 시간 저장 변수
+        let finalTime = 0; 
         const STUN_DURATION = 1500; 
 
         let tree = []; 
@@ -403,10 +419,10 @@
         const messageTitle = document.getElementById('message-title');
         const messageText = document.getElementById('message-text');
         const stunMessageEl = document.getElementById('stun-message');
-        const submissionModal = document.getElementById('submission-modal'); // NEW
-        const playerNameInput = document.getElementById('player-name-input'); // NEW
-        const timeToSubmitEl = document.getElementById('time-to-submit'); // NEW
-        const leaderboardListEl = document.getElementById('leaderboard-list'); // NEW
+        const submissionModal = document.getElementById('submission-modal'); 
+        const playerNameInput = document.getElementById('player-name-input'); 
+        const timeToSubmitEl = document.getElementById('time-to-submit'); 
+        const leaderboardListEl = document.getElementById('leaderboard-list'); 
 
         // --- Firebase/Auth/Leaderboard Functions ---
 
@@ -427,11 +443,10 @@
 
                 userId = auth.currentUser?.uid || crypto.randomUUID();
                 
-                // Firestore 리스너 설정
                 setupLeaderboardListener();
             } catch (error) {
                 console.error("Firebase 초기화 또는 인증 오류:", error);
-                leaderboardListEl.innerHTML = '<li class="p-2 text-red-500">순위표 로딩 실패: Firebase 오류</li>';
+                leaderboardListEl.innerHTML = '<li class="p-2 text-red-500 text-center">순위표 로딩 실패: Firebase 오류</li>';
             }
         }
 
@@ -455,49 +470,53 @@
                 renderLeaderboard(scores);
             }, (error) => {
                 console.error("순위표 실시간 업데이트 오류:", error);
-                leaderboardListEl.innerHTML = '<li class="p-2 text-red-500">순위표 실시간 오류</li>';
+                leaderboardListEl.innerHTML = '<li class="p-2 text-red-500 text-center">순위표 실시간 오류</li>';
             });
         }
 
         async function checkAndShowLeaderboard(newTime) {
             if (!db) {
-                gameOver(true, false); // Firebase 오류 시 일반 승리 메시지 표시
+                // Firebase 오류 시 일반 승리 메시지 표시
+                gameOver(true, true); 
                 return;
             }
 
-            // 현재 상위 3개 기록을 가져옴
-            const q = query(getLeaderboardCollection(), orderBy('time', 'asc'), limit(3));
-            const snapshot = await getDocs(q);
-            const currentScores = snapshot.docs.map(doc => doc.data());
+            try {
+                // 현재 상위 3개 기록을 가져옴 (실시간 리스너와 분리)
+                const q = query(getLeaderboardCollection(), orderBy('time', 'asc'), limit(3));
+                const snapshot = await getDocs(q);
+                const currentScores = snapshot.docs.map(doc => doc.data());
 
-            let qualifies = false;
+                let qualifies = false;
 
-            if (currentScores.length < 3) {
-                // 3개 미만이면 무조건 순위권
-                qualifies = true;
-            } else {
-                // 현재 3등 기록보다 빠르면 순위권
-                const thirdPlaceTime = currentScores[2].time;
-                if (newTime < thirdPlaceTime) {
+                if (currentScores.length < 3) {
                     qualifies = true;
+                } else {
+                    const thirdPlaceTime = currentScores[2].time;
+                    if (newTime < thirdPlaceTime) {
+                        qualifies = true;
+                    }
                 }
-            }
-            
-            if (qualifies) {
-                // 순위권이면 이름 등록 모달 표시
-                finalTime = newTime; // 등록할 시간 저장
-                showSubmissionModal();
-            } else {
-                // 순위권이 아니면 일반 승리 메시지 표시
-                gameOver(true, true); 
+                
+                if (qualifies) {
+                    finalTime = newTime; 
+                    showSubmissionModal();
+                } else {
+                    // 순위권이 아니면 일반 승리 메시지 표시
+                    gameOver(true, true); 
+                }
+            } catch (error) {
+                console.error("순위 확인 오류:", error);
+                // 오류 발생 시 일반 승리 메시지 표시
+                gameOver(true, true);
             }
         }
 
         function showSubmissionModal() {
             submissionModal.style.display = 'flex';
-            messageBox.style.display = 'none'; // 승리 메시지 숨김
+            messageBox.style.display = 'none'; 
             timeToSubmitEl.textContent = `기록: ${finalTime.toFixed(2)}s`;
-            playerNameInput.value = ''; // 입력값 초기화
+            playerNameInput.value = ''; 
             playerNameInput.focus();
         }
 
@@ -517,6 +536,10 @@
             }
 
             try {
+                // 이름 등록 버튼을 비활성화하여 중복 제출 방지
+                const submitButton = submissionModal.querySelector('.chop-button');
+                submitButton.disabled = true;
+
                 await addDoc(getLeaderboardCollection(), {
                     name: name,
                     time: finalTime,
@@ -525,10 +548,10 @@
                 });
                 
                 submissionModal.style.display = 'none';
-                gameOver(true, true); // 등록 후 일반 승리 메시지 표시 (이미 순위권 진입 완료)
+                gameOver(true, true); // 등록 후 일반 승리 메시지 표시
+                submitButton.disabled = false;
             } catch (e) {
                 console.error("점수 등록 오류: ", e);
-                // 오류 발생 시에도 일단 승리 메시지는 표시
                 submissionModal.style.display = 'none';
                 gameOver(true, true); 
             }
@@ -538,7 +561,7 @@
             leaderboardListEl.innerHTML = '';
             
             if (scores.length === 0) {
-                leaderboardListEl.innerHTML = '<li class="p-2 text-gray-500">아직 등록된 기록이 없습니다.</li>';
+                leaderboardListEl.innerHTML = '<li class="p-2 text-gray-500 text-center">아직 등록된 기록이 없습니다.</li>';
                 return;
             }
 
@@ -546,7 +569,6 @@
                 const rank = index + 1;
                 const listItem = document.createElement('li');
                 
-                // 순위에 따른 배경색 클래스 추가
                 let rankClass = '';
                 if (rank === 1) rankClass = 'rank-1';
                 else if (rank === 2) rankClass = 'rank-2';
@@ -563,19 +585,8 @@
         }
 
 
-        // --- Game Logic Functions (Minor modifications) ---
+        // --- Game Logic Functions ---
         
-        // base64ToArrayBuffer (보일러플레이트 유지)
-        function base64ToArrayBuffer(base64) {
-            const binaryString = atob(base64);
-            const len = binaryString.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-            }
-            return bytes.buffer;
-        }
-
         function getRandomBranch() {
             const rand = Math.random();
             if (rand < 0.2) return BRANCH_LEFT;
@@ -585,6 +596,7 @@
 
         function generateInitialTree() {
             tree = [];
+            // 나무 맨 아래 두 칸은 항상 나뭇가지 없음
             for (let i = 0; i < VISIBLE_SEGMENTS + 1; i++) { 
                 tree.push(i < 2 ? BRANCH_NONE : getRandomBranch()); 
             }
@@ -617,6 +629,7 @@
             if (!isStunned) {
                 playerEl.className = `player ${playerSide}`;
             
+                // 도끼 애니메이션 (약간의 상하 움직임)
                 playerEl.style.transform = playerSide === 'left' ? 'scaleX(1) translateY(-10px)' : 'scaleX(-1) translateY(-10px)';
                 setTimeout(() => {
                     playerEl.style.transform = playerSide === 'left' ? 'scaleX(1) translateY(0)' : 'scaleX(-1) translateY(0)';
@@ -625,6 +638,7 @@
         }
 
         function handleChop(side) {
+            // 게임 시작 (첫 번째 베기 시점)
             if (!gameStarted) {
                 gameStarted = true;
                 gameActive = true;
@@ -653,10 +667,6 @@
                 playerEl.classList.add('stunned');
                 stunMessageEl.style.display = 'block';
 
-                // 요청에 따라 점수 감소 로직 제거
-                // score = Math.max(0, score - 5); 
-                scoreEl.textContent = `점수: ${score}`;
-
                 setTimeout(() => {
                     isStunned = false;
                     playerEl.classList.remove('stunned');
@@ -674,6 +684,7 @@
 
             updatePlayerVisual();
 
+            // 나무를 베는 애니메이션 효과 (부드러운 이동을 위해 setTimeout 사용)
             const segments = treeArea.children;
             for (let i = 0; i < segments.length; i++) {
                 segments[i].style.transform = `translateY(${SEGMENT_HEIGHT}px)`;
@@ -684,15 +695,13 @@
             }, 50);
 
             if (score >= TOTAL_CHOP) {
-                // 게임 종료 및 타이머 정지 (순위권 등록 시 게임이 멈추도록 수정)
                 gameActive = false; 
                 clearInterval(timerInterval); 
                 
                 const winTime = (Date.now() - startTime) / 1000;
                 
-                // [수정된 부분] HUD에 최종 시간을 정확하게 업데이트하여 최종 기록과 일치시킵니다.
+                // [요청에 따른 수정]: HUD에 최종 시간을 정확하게 업데이트하여 기록과 일치
                 timerEl.textContent = `시간: ${winTime.toFixed(2)}s`; 
-                // 최종 기록 저장
                 finalTime = winTime;
 
                 // 순위 확인 함수 호출
@@ -701,19 +710,19 @@
         }
 
         function handleInput(event) {
-            if (isStunned) return;
+            // 모달이 열려 있을 때는 키보드 입력을 무시 (스페이스바 재시작 제외)
+            const isModalOpen = messageBox.style.display === 'flex' || submissionModal.style.display === 'flex';
 
-            if (event.key === 'ArrowLeft') {
+            if (event.key === 'ArrowLeft' && !isModalOpen) {
                 event.preventDefault(); 
                 handleChop('left');
-            } else if (event.key === 'ArrowRight') {
+            } else if (event.key === 'ArrowRight' && !isModalOpen) {
                 event.preventDefault(); 
                 handleChop('right');
             } else if (event.key === ' ') { 
                 event.preventDefault();
-                // 게임이 비활성 상태이고 메시지 박스 또는 등록 모달이 보일 때 재시작
-                const isModalVisible = messageBox.style.display === 'flex' || submissionModal.style.display === 'flex';
-                if (!gameActive && isModalVisible) {
+                // 게임이 비활성 상태이고 모달이 보일 때만 재시작
+                if (!gameActive && isModalOpen) {
                     initGame();
                 }
             }
@@ -729,7 +738,6 @@
          * Initializes or resets the game state.
          */
         function initGame() {
-            // Auth/DB는 initFirebaseAndAuth에서 한 번만 호출
             if (!db) {
                 initFirebaseAndAuth();
             }
@@ -770,20 +778,17 @@
         /**
          * Handles game end (Win only).
          * @param {boolean} win - True if the player won.
-         * @param {boolean} alreadyQualified - 순위권 등록을 이미 했거나, 순위권 진입에 실패하여 일반 메시지를 띄울 차례인 경우 true
+         * @param {boolean} alreadyHandled - 순위 확인/등록 과정을 거쳐 최종 메시지를 띄울 차례인 경우 true
          */
-        function gameOver(win, alreadyQualified = false) {
+        function gameOver(win, alreadyHandled = false) {
             gameActive = false; 
             clearInterval(timerInterval);
             
-            // 승리 후 순위권 체크 과정에서 이미 게임이 멈췄으므로, 이 함수는 메시지 표시 역할만 함
-            // alreadyQualified가 false면 순위 체크가 진행 중이라는 의미이므로 메시지 표시를 막음
-            if (!alreadyQualified) {
+            // 순위 확인 중이거나 (alreadyHandled=false), 승리하지 못한 경우 메시지 표시를 막음
+            if (!alreadyHandled) {
                  return;
             }
-
-            // finalTime은 handleChop에서 이미 HUD와 일치하는 정확한 값으로 설정되었습니다.
-
+            
             if (win) {
                 messageTitle.textContent = '🎉 게임 승리! 🎉';
                 messageTitle.style.color = '#38a169';
